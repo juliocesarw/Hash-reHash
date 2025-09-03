@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdio> 
 using namespace std;
 #include <cstdlib>
 #include <ctype.h>
@@ -118,9 +119,8 @@ int somaDosCaracteres(char * nome){
     for (int i = 0; nome[i] != '\0'; i++) {
         indice += (int)nome[i];  
     }  
-    return indice;
+    return indice * indice * indice;
 }
-
 
 int retornaIndiceHash(char * nome){
     int indice = somaDosCaracteres(nome);
@@ -136,20 +136,25 @@ bool insere(int indice, Aluno * ponteiroParaAluno){
     }    
     else{
         int somaDoNome = somaDosCaracteres(ponteiroParaAluno->nome);
-        int indiceNovo = 1 + (somaDoNome % (a.tamanhoAtual - 1));
+        int indiceNovo = (1 + (somaDoNome % (a.tamanhoAtual - 1)) + indice) % a.tamanhoAtual;
 
         if(a.hash[indiceNovo] == NULL){
             a.hash[indiceNovo] = ponteiroParaAluno;
+            return true;
         }
         else{
             for (int i = 2; i < a.tamanhoAtual; i++)
             {
-                indiceNovo = 7777;
-                
+                int indiceNovo = ((somaDoNome % (a.tamanhoAtual)) + indiceNovo) % a.tamanhoAtual;
+                if(a.hash[indiceNovo] == NULL){
+                    a.hash[indiceNovo] = ponteiroParaAluno;
+                    return true;
+                }
+                if(a.tamanhoAtual * CARGA_MAXIMA == i){
+                    //chama a funcao de expansão
+                }
             }
-            
         }
-
     }    
     return false; 
 }    
@@ -157,11 +162,12 @@ bool insere(int indice, Aluno * ponteiroParaAluno){
 int main() {
 
     inicializa();
-    // processoInsercao();
-    // imprimirHash();
-    char nome[70] = "Lisa Alzira Jacobs";
-    int e = retornaIndiceHash(nome);
-    cout << e << endl;
+    processoInsercao();
+    imprimirHash();
+    // char nome[70] = "Lisa Alzira Jacobs";
+    // int e = somaDosCaracteres(nome);
+    // int e = retornaIndiceHash(nome);
+    // cout << e << endl;
     return 0;
 }
 
