@@ -39,7 +39,7 @@ void inicializa(){
 //declaracao de funcoes
 Aluno *lerAluno();
 FILE * abrir_arquivo( const char * arquivo, const char * modo);
-void processoInsercao();
+void processoLeituraInsercao();
 int proximoPrimoDobro();
 int retornaIndiceHash(char * nome);
 bool insere(int indice, Aluno * ponteiroParaAluno);
@@ -47,6 +47,8 @@ int ehPrimo(int x);
 int proximoPrimoDobro();
 void imprimirHash();
 int somaDosCaracteres(char * nome);
+bool apenasInsere(int indice, Aluno * ponteiroParaAluno);
+bool dinamizacaoVetor(Aluno * ponteiro);
 //============================================================================================
 
 // funcoes
@@ -79,7 +81,7 @@ FILE * abrir_arquivo(const char * arquivo, const char * modo){
 	return arq;
 }
 
-void processoInsercao(){
+void processoLeituraInsercao(){
     FILE * arq;
     arq = abrir_arquivo("../textos/teste.csv", "r");
 
@@ -127,32 +129,35 @@ int retornaIndiceHash(char * nome){
     return indice % a.tamanhoAtual;
 }    
 
-bool insere(int indice, Aluno * ponteiroParaAluno){
+bool apenasInsere(int indice, Aluno * ponteiroParaAluno){
 
     if(a.hash[indice] == NULL){
         a.hash[indice] = ponteiroParaAluno;
         if (a.hashOcupada[indice] == false) a.hashOcupada[indice] = true; 
+        a.quantidade++;
+        return true;
+    }    
+    return false; 
+}
+
+bool dinamizacaoVetor(Aluno * ponteiro){
+
+}
+
+bool insere(int indice, Aluno * ponteiroParaAluno){
+
+    if(apenasInsere(indice, ponteiroParaAluno) == true){ 
         return true;
     }    
     else{
         int somaDoNome = somaDosCaracteres(ponteiroParaAluno->nome);
-        int indiceNovo = (1 + (somaDoNome % (a.tamanhoAtual - 1)) + indice) % a.tamanhoAtual;
+        int h2 = 1 + (somaDoNome % (a.tamanhoAtual - 1));
 
-        if(a.hash[indiceNovo] == NULL){
-            a.hash[indiceNovo] = ponteiroParaAluno;
-            return true;
-        }
-        else{
-            for (int i = 2; i < a.tamanhoAtual; i++)
-            {
-                int indiceNovo = ((somaDoNome % (a.tamanhoAtual)) + indiceNovo) % a.tamanhoAtual;
-                if(a.hash[indiceNovo] == NULL){
-                    a.hash[indiceNovo] = ponteiroParaAluno;
+        for (int i = 2; i < 20; i++)
+        {
+            int indiceNovo = (indice + (h2 * i)) % 1021;
+            if(apenasInsere(indiceNovo, ponteiroParaAluno) == true){
                     return true;
-                }
-                if(a.tamanhoAtual * CARGA_MAXIMA == i){
-                    //chama a funcao de expansão
-                }
             }
         }
     }    
@@ -162,12 +167,13 @@ bool insere(int indice, Aluno * ponteiroParaAluno){
 int main() {
 
     inicializa();
-    processoInsercao();
+    processoLeituraInsercao();
     imprimirHash();
-    // char nome[70] = "Lisa Alzira Jacobs";
-    // int e = somaDosCaracteres(nome);
-    // int e = retornaIndiceHash(nome);
-    // cout << e << endl;
+    // char nom'e[70] = "Lisa Alzira Jacobs";
+    // int e = 'somaDosCaracteres(nome);
+    // int e1 =' retornaIndiceHash(nome);
+    // cout << 'e << endl;
+    // cout << e1 << endl;
     return 0;
 }
 
