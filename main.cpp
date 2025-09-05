@@ -48,7 +48,7 @@ int proximoPrimoDobro();
 void imprimirHash();
 int somaDosCaracteres(char * nome);
 bool apenasInsere(int indice, Aluno * ponteiroParaAluno);
-bool dinamizacaoVetor(Aluno * ponteiro);
+bool dinamizacaoVetor();
 //============================================================================================
 
 // funcoes
@@ -135,13 +135,18 @@ bool apenasInsere(int indice, Aluno * ponteiroParaAluno){
         a.hash[indice] = ponteiroParaAluno;
         if (a.hashOcupada[indice] == false) a.hashOcupada[indice] = true; 
         a.quantidade++;
+        if(a.quantidade == TAMANHO_HASH_INICIAL * CARGA_MAXIMA) dinamizacaoVetor();
         return true;
     }    
     return false; 
 }
 
-bool dinamizacaoVetor(Aluno * ponteiro){
-
+bool dinamizacaoVetor(){
+    int proximoPrimo = proximoPrimoDobro();
+    Aluno **aux = new Aluno*[proximoPrimo]();
+    // fazer a funcao de insercao apenas para quando expandir
+    a.tamanhoAtual = proximoPrimo;
+    
 }
 
 bool insere(int indice, Aluno * ponteiroParaAluno){
